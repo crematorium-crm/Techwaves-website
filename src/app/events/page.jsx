@@ -1,8 +1,13 @@
+"use client"
 import Header from '@/components/Header'
-import Section from '@/components/Section'
 import Footer from '@/components/Footer'
 
+import { useState } from 'react'
+import { Calendar, Clock, MapPin, User, Users, TrendingUp, Zap, Code, Cpu } from 'lucide-react'
+
 export default function Events() {
+  const [hoveredEvent, setHoveredEvent] = useState(null)
+
   const upcomingEvents = [
     {
       title: "Workshop React Avancé",
@@ -14,7 +19,7 @@ export default function Events() {
       speaker: "Zertit Dorsane",
       capacity: 30,
       registered: 28,
-      image: "/events/react-workshop.jpg"
+      icon: Code
     },
     {
       title: "Hackathon Intelligence Artificielle",
@@ -26,7 +31,7 @@ export default function Events() {
       speaker: "Équipe AI Techwaves",
       capacity: 120,
       registered: 95,
-      image: "/events/ai-hackathon.jpg"
+      icon: Cpu
     },
     {
       title: "Conférence Cloud Computing",
@@ -38,7 +43,7 @@ export default function Events() {
       speaker: "Expert Huawei Cloud",
       capacity: 200,
       registered: 150,
-      image: "/events/cloud-conference.jpg"
+      icon: Zap
     }
   ]
 
@@ -74,180 +79,252 @@ export default function Events() {
   ]
 
   const eventStats = [
-    { number: "12", label: "Événements Organisés" },
-    { number: "500+", label: "Participants Totaux" },
-    { number: "15", label: "Intervenants Experts" },
-    { number: "3", label: "Types d'Événements" }
+    { number: "12", label: "Événements Organisés", icon: Calendar },
+    { number: "500+", label: "Participants Totaux", icon: Users },
+    { number: "15", label: "Intervenants Experts", icon: User },
+    { number: "3", label: "Types d'Événements", icon: TrendingUp }
   ]
 
   const getEventTypeColor = (type) => {
     switch (type) {
-      case "Workshop": return "from-blue-500 to-cyan-500"
-      case "Hackathon": return "from-purple-500 to-pink-500"
-      case "Conférence": return "from-green-500 to-teal-500"
-      default: return "from-orange-500 to-red-500"
+      case "Workshop": return "from-blue-600 via-blue-500 to-cyan-500"
+      case "Hackathon": return "from-cyan-600 via-cyan-500 to-blue-400"
+      case "Conférence": return "from-blue-500 via-cyan-500 to-cyan-400"
+      default: return "from-blue-600 to-cyan-600"
     }
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+        <div className="absolute top-1/3 -right-48 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse delay-2000"></div>
+      </div>
+
+      {/* Grid Pattern Overlay */}
+      <div className="fixed inset-0 pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px)`,
+        backgroundSize: '50px 50px'
+      }}></div>
       <Header />
-      <main className="pt-20 min-h-screen grid-background">
-        <Section 
-          title="Agenda des Événements" 
-          subtitle="Ne manquez pas nos prochains rendez-vous technologiques"
-        >
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            {eventStats.map((stat, index) => (
-              <div key={index} className="tech-card rounded-xl p-6 text-center">
-                <div className="tech-gradient-text text-3xl font-bold mb-2">{stat.number}</div>
-                <div className="text-tech-300 text-sm">{stat.label}</div>
+      <main className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+        
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Section */}
+          <div className="text-center mb-16 relative">
+            <div className="inline-block mb-6">
+              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 border border-cyan-500/20 rounded-full shadow-lg shadow-cyan-500/10">
+                <Calendar className="w-5 h-5 text-cyan-400" />
+                <span className="text-cyan-300 font-medium">Agenda 2024-2025</span>
               </div>
-            ))}
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-500 bg-clip-text text-transparent">
+                Événements Tech
+              </span>
+            </h1>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+              Rejoignez-nous pour des expériences technologiques inoubliables. 
+              Workshops, hackathons et conférences avec les meilleurs experts du domaine.
+            </p>
           </div>
 
-          {/* Événements à venir */}
-          <div className="mb-16">
-            <h3 className="text-2xl font-bold text-center text-white mb-8">
-              Prochains Événements
-            </h3>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {upcomingEvents.map((event, index) => (
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-20">
+            {eventStats.map((stat, index) => {
+              const Icon = stat.icon
+              return (
                 <div 
-                  key={index}
-                  className="tech-card rounded-2xl overflow-hidden group hover:neon-glow transition-all duration-500"
+                  key={index} 
+                  className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20"
                 >
-                  {/* Header avec gradient */}
-                  <div className={`h-32 bg-gradient-to-r ${getEventTypeColor(event.type)} relative`}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                        <p className="text-sm opacity-90">{event.type}</p>
-                      </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/5 group-hover:to-blue-500/5 rounded-2xl transition-all duration-500"></div>
+                  <div className="relative">
+                    <Icon className="w-8 h-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform duration-300" />
+                    <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+                      {stat.number}
                     </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="px-3 py-1 bg-tech-800 text-tech-300 rounded-full text-sm font-medium border border-tech-700">
-                        {event.type}
-                      </span>
-                      <span className="text-sm text-tech-500">
-                        {event.date}
-                      </span>
-                    </div>
-                    
-                    <h4 className="text-xl font-semibold text-white mb-3 group-hover:tech-gradient-text transition-all duration-300">
-                      {event.title}
-                    </h4>
-                    
-                    <p className="text-tech-300 mb-4 leading-relaxed">
-                      {event.description}
-                    </p>
-
-                    {/* Info détaillée */}
-                    <div className="space-y-2 text-sm text-tech-400 mb-4">
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>{event.location}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>Intervenant: {event.speaker}</span>
-                      </div>
-                    </div>
-
-                    {/* Barre de progression des inscriptions */}
-                    <div className="mb-4">
-                      <div className="flex justify-between text-sm text-tech-400 mb-2">
-                        <span>Inscriptions</span>
-                        <span>{event.registered}/{event.capacity}</span>
-                      </div>
-                      <div className="w-full bg-tech-800 rounded-full h-2">
-                        <div 
-                          className="tech-gradient h-2 rounded-full transition-all duration-1000"
-                          style={{ width: `${(event.registered / event.capacity) * 100}%` }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <button className="w-full tech-gradient text-white font-medium py-3 px-4 rounded-lg hover:scale-105 transition-transform duration-300">
-                      S'inscrire Maintenant
-                    </button>
+                    <div className="text-slate-400 text-sm font-medium">{stat.label}</div>
                   </div>
                 </div>
-              ))}
+              )
+            })}
+          </div>
+
+          {/* Upcoming Events */}
+          <div className="mb-20">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white">
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                  Prochains Événements
+                </span>
+              </h2>
+              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {upcomingEvents.map((event, index) => {
+                const Icon = event.icon
+                const progress = (event.registered / event.capacity) * 100
+                
+                return (
+                  <div 
+                    key={index}
+                    onMouseEnter={() => setHoveredEvent(index)}
+                    onMouseLeave={() => setHoveredEvent(null)}
+                    className="group relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-3xl overflow-hidden border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20"
+                  >
+                    {/* Animated gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-cyan-500/0 group-hover:from-cyan-500/10 group-hover:via-blue-500/5 group-hover:to-cyan-500/10 transition-all duration-700"></div>
+                    
+                    {/* Header with gradient */}
+                    <div className={`relative h-48 bg-gradient-to-br ${getEventTypeColor(event.type)} overflow-hidden`}>
+                      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                        <div className="relative mb-4">
+                          <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
+                          <div className="relative bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20 group-hover:scale-110 transition-transform duration-300">
+                            <Icon className="w-10 h-10" />
+                          </div>
+                        </div>
+                        <span className="text-lg font-semibold tracking-wide">{event.type}</span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <span className="px-4 py-1.5 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 rounded-full text-sm font-medium border border-cyan-500/30">
+                          {event.type}
+                        </span>
+                        <div className="flex items-center gap-2 text-slate-400">
+                          <Calendar className="w-4 h-4" />
+                          <span className="text-sm font-medium">{event.date}</span>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors duration-300">
+                        {event.title}
+                      </h3>
+                      
+                      <p className="text-slate-400 mb-6 leading-relaxed">
+                        {event.description}
+                      </p>
+
+                      {/* Event Details */}
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors">
+                          <Clock className="w-4 h-4 text-cyan-500" />
+                          <span className="text-sm">{event.time}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors">
+                          <MapPin className="w-4 h-4 text-cyan-500" />
+                          <span className="text-sm">{event.location}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors">
+                          <User className="w-4 h-4 text-cyan-500" />
+                          <span className="text-sm">{event.speaker}</span>
+                        </div>
+                      </div>
+
+                      {/* Registration Progress */}
+                      <div className="mb-6">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="text-slate-400 font-medium">Inscriptions</span>
+                          <span className="text-cyan-400 font-bold">{event.registered}/{event.capacity}</span>
+                        </div>
+                        <div className="relative h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                          <div 
+                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-1000 ease-out"
+                            style={{ 
+                              width: `${progress}%`,
+                              boxShadow: hoveredEvent === index ? '0 0 20px rgba(6, 182, 212, 0.5)' : 'none'
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                          </div>
+                        </div>
+                        {progress > 90 && (
+                          <p className="text-xs text-amber-400 mt-2 font-medium">⚠️ Places limitées !</p>
+                        )}
+                      </div>
+
+                      {/* CTA Button */}
+                      <button className="w-full relative group/btn overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/50">
+                        <span className="relative z-10">S'inscrire Maintenant</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
-          {/* Archives des événements */}
-          <div>
-            <h3 className="text-2xl font-bold text-center text-white mb-8">
-              Événements Passés
-            </h3>
-            <div className="tech-card rounded-2xl overflow-hidden">
+          {/* Past Events */}
+          <div className="mb-20">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white">
+                <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  Événements Passés
+                </span>
+              </h2>
+              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+            </div>
+
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-3xl overflow-hidden border border-slate-700/50">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-tech-800">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-tech-300 uppercase tracking-wider">
+                  <thead>
+                    <tr className="border-b border-slate-700">
+                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
                         Événement
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-tech-300 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
                         Date
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-tech-300 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
                         Type
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-tech-300 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
                         Participants
                       </th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-tech-300 uppercase tracking-wider">
+                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
                         Statut
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-tech-800">
+                  <tbody className="divide-y divide-slate-700/50">
                     {pastEvents.map((event, index) => (
-                      <tr key={index} className="hover:bg-tech-800 transition-colors duration-300">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-white">
+                      <tr key={index} className="hover:bg-slate-800/50 transition-colors duration-300 group">
+                        <td className="px-6 py-5">
+                          <div className="text-sm font-semibold text-white group-hover:text-cyan-400 transition-colors">
                             {event.title}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-tech-400">
+                        <td className="px-6 py-5">
+                          <div className="text-sm text-slate-400">
                             {event.date}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-3 py-1 text-xs bg-tech-700 text-tech-300 rounded-full border border-tech-600">
+                        <td className="px-6 py-5">
+                          <span className="px-3 py-1.5 text-xs bg-gradient-to-r from-slate-700 to-slate-600 text-slate-300 rounded-full border border-slate-600 font-medium">
                             {event.type}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-tech-400">
-                          {event.participants} participants
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2 text-sm text-slate-400">
+                            <Users className="w-4 h-4 text-cyan-500" />
+                            <span>{event.participants}</span>
+                          </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 py-1 text-xs bg-green-400 bg-opacity-10 text-green-400 rounded-full">
-                            {event.status}
+                        <td className="px-6 py-5">
+                          <span className="px-3 py-1.5 text-xs bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/30 font-medium">
+                            ✓ {event.status}
                           </span>
                         </td>
                       </tr>
@@ -258,29 +335,61 @@ export default function Events() {
             </div>
           </div>
 
-          {/* Newsletter */}
-          <div className="tech-card rounded-2xl p-8 mt-12 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Restez Informé
-            </h3>
-            <p className="text-tech-300 mb-6 max-w-2xl mx-auto">
-              Ne manquez aucun de nos événements. Inscrivez-vous à notre newsletter 
-              pour recevoir les dernières actualités et invitations en avant-première.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Votre email"
-                className="flex-1 px-4 py-3 bg-tech-800 border border-tech-700 rounded-xl focus:ring-2 focus:ring-tech-neon focus:border-transparent text-white placeholder-tech-500"
-              />
-              <button className="tech-gradient text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-transform duration-300">
-                S'abonner
-              </button>
+          {/* Newsletter Section */}
+          <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-3xl p-10 md:p-14 border border-slate-700/50 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-blue-500/5 to-transparent"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-3xl"></div>
+            
+            <div className="relative text-center">
+              <div className="inline-block mb-6">
+                <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-4 rounded-2xl border border-cyan-500/30">
+                  <Zap className="w-12 h-12 text-cyan-400" />
+                </div>
+              </div>
+              
+              <h3 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                  Restez Connecté
+                </span>
+              </h3>
+              
+              <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+                Recevez en avant-première les annonces d'événements, les invitations exclusives 
+                et les dernières actualités tech directement dans votre boîte mail.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                <input
+                  type="email"
+                  placeholder="votre@email.com"
+                  className="flex-1 px-6 py-4 bg-slate-900/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-slate-500 outline-none transition-all duration-300"
+                />
+                <button className="relative group/sub overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50">
+                  <span className="relative z-10">S'abonner</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover/sub:opacity-100 transition-opacity duration-300"></div>
+                </button>
+              </div>
             </div>
           </div>
-        </Section>
+        </div>
+        <Footer />
       </main>
-      <Footer />
-    </>
+
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 0.1; }
+          50% { opacity: 0.15; }
+        }
+        .animate-pulse {
+          animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .delay-1000 {
+          animation-delay: 1s;
+        }
+        .delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
+    </div>
   )
 }
