@@ -28,13 +28,15 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        'century-gothic': ['Century Gothic', 'CenturyGothic', 'AppleGothic', 'sans-serif'],
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
         'slide-up': 'slideUp 0.5s ease-out',
+        'typewriter': 'typewriter 1.5s steps(40, end) forwards',
+        'blink-caret': 'blink-caret 0.75s step-end infinite',
+        'expand-width': 'expandWidth 1s ease-out forwards',
       },
       keyframes: {
         float: {
@@ -48,6 +50,18 @@ module.exports = {
         slideUp: {
           '0%': { opacity: '0', transform: 'translateY(30px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        typewriter: {
+          'from': { width: '0' },
+          'to': { width: '100%' },
+        },
+        'blink-caret': {
+          'from, to': { 'border-color': 'transparent' },
+          '50%': { 'border-color': '#7dd3fc' },
+        },
+        expandWidth: {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
         }
       },
       backgroundImage: {

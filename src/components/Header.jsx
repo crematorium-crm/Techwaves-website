@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
+import techwaveswhite from '../assets/techwaveslogowhite.png'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -29,33 +31,33 @@ export default function Header() {
 
   return (
     <>
-      {/* Header Principal */}
-      <header className={`
-        fixed top-0 w-full z-50 transition-all duration-500
-        ${isScrolled 
-          ? 'py-3 bg-tech-dark/95 backdrop-blur-xl border-b border-tech-700/50 shadow-2xl' 
-          : 'py-5 bg-gradient-to-b from-tech-dark/95 to-transparent'
-        }
-      `}>
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
+      {/* Header Principal - Floating Container */}
+      <header className="fixed top-0 w-full z-50 pt-6 px-6">
+        <div className={`
+          container mx-auto max-w-6xl
+          bg-black/40 backdrop-blur-2xl
+          border border-white/10
+          rounded-full
+          transition-all duration-500
+          ${isScrolled 
+            ? 'py-2 shadow-2xl shadow-black/20' 
+            : 'py-2.5 shadow-xl shadow-black/10'
+          }
+        `}>
+          <div className="px-6 flex justify-between items-center">
             
-            {/* Logo avec animation */}
+            {/* Logo */}
             <Link 
               href="/" 
-              className="flex items-center space-x-3 group relative"
+              className="flex items-center group relative z-10"
             >
-              <div className="relative">
-                <div className="w-12 h-12 tech-gradient rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-tech-neon/30 transition-all duration-300">
-                  <span className="text-white font-bold text-lg">T</span>
-                </div>
-                <div className="absolute -inset-1 tech-gradient rounded-xl opacity-0 group-hover:opacity-30 blur transition-all duration-500"></div>
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-xl font-bold tech-gradient-text leading-tight">Techwaves</h1>
-                <p className="text-xs text-tech-300 leading-tight">ENSB</p>
-                <div className="w-0 group-hover:w-full h-0.5 tech-gradient transition-all duration-500 mt-1"></div>
-              </div>
+              <Image 
+                src={techwaveswhite} 
+                alt="Techwaves Logo" 
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
 
             {/* Navigation Desktop - Centrée */}
@@ -65,38 +67,21 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className={`
-                    relative px-4 py-2 rounded-lg font-medium transition-all duration-300 group
+                    relative px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300
                     ${pathname === item.href 
-                      ? 'text-tech-neon' 
-                      : 'text-tech-300 hover:text-white'
+                      ? 'text-white bg-white/10' 
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
                     }
                   `}
                 >
                   {item.name}
-                  <span className={`
-                    absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 tech-gradient 
-                    transition-all duration-300 group-hover:w-3/4
-                    ${pathname === item.href ? 'w-3/4' : ''}
-                  `}></span>
-                  
-                  {/* Effet de background au hover */}
-                  <div className="absolute inset-0 bg-tech-700/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                 </Link>
               ))}
             </nav>
 
             {/* CTA Desktop */}
-            <div className="hidden lg:flex items-center space-x-4">
-              <Link 
-                href="/register" 
-                className="
-                  tech-gradient text-white px-6 py-2.5 rounded-xl font-semibold 
-                  hover:shadow-lg hover:scale-105 transition-all duration-300 
-                  shadow-lg shadow-tech-electric/20
-                "
-              >
-                Rejoindre
-              </Link>
+            <div className="hidden lg:flex items-center">
+              
             </div>
 
             {/* Menu Mobile Button */}
@@ -106,65 +91,65 @@ export default function Header() {
               aria-label="Menu"
             >
               <div className={`
-                w-6 h-0.5 bg-white transition-all duration-300
+                w-5 h-0.5 bg-white rounded-full transition-all duration-300
                 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}
               `}></div>
               <div className={`
-                w-6 h-0.5 bg-white transition-all duration-300 my-1.5
+                w-5 h-0.5 bg-white rounded-full transition-all duration-300 my-1.5
                 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}
               `}></div>
               <div className={`
-                w-6 h-0.5 bg-white transition-all duration-300
+                w-5 h-0.5 bg-white rounded-full transition-all duration-300
                 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}
               `}></div>
             </button>
           </div>
-        </div>
 
-        {/* Menu Mobile */}
-        <div className={`
-          lg:hidden absolute top-full left-0 w-full 
-          bg-tech-dark/95 backdrop-blur-xl border-t border-tech-700/50
-          transition-all duration-500 overflow-hidden
-          ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
-        `}>
-          <div className="container mx-auto px-4 py-4">
-            <nav className="flex flex-col space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    px-4 py-3 rounded-xl font-medium transition-all duration-300
-                    ${pathname === item.href 
-                      ? 'tech-gradient text-white shadow-lg' 
-                      : 'text-tech-300 hover:bg-tech-700/50 hover:text-white'
-                    }
-                  `}
+          {/* Menu Mobile */}
+          <div className={`
+            lg:hidden overflow-hidden transition-all duration-500
+            ${isMenuOpen ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}
+          `}>
+            <div className="px-6 pb-4 border-t border-white/5 pt-4">
+              <nav className="flex flex-col space-y-1">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`
+                      px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300
+                      ${pathname === item.href 
+                        ? 'bg-white/10 text-white' 
+                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      }
+                    `}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                
+                {/* CTA Mobile */}
+                <Link 
+                  href="/register" 
+                  className="
+                    mt-4 px-4 py-3 rounded-xl text-sm font-semibold text-white text-center
+                    bg-gradient-to-r from-blue-500 to-blue-600
+                    hover:from-blue-400 hover:to-blue-500
+                    transition-all duration-300
+                    shadow-lg shadow-blue-500/20
+                  "
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {item.name}
+                  Rejoindre le Club
                 </Link>
-              ))}
-              
-              {/* CTA Mobile */}
-              <Link 
-                href="/register" 
-                className="
-                  tech-gradient text-white px-4 py-3 rounded-xl font-semibold 
-                  text-center mt-4 hover:shadow-lg transition-all duration-300
-                "
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Rejoindre le Club
-              </Link>
-            </nav>
+              </nav>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Espace réservé pour compenser le header fixed */}
-      <div className="h-20 lg:h-24"></div>
+
     </>
   )
 }
