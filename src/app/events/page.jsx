@@ -670,20 +670,20 @@ function EventGallery({ event, isActive, index }) {
   }, [event.galleryImages.length]);
 
   const FloatingLayers = ({ images, currentIndex }) => (
-    <div className="relative h-[500px] flex items-center justify-center" style={{ perspective: '2000px' }}>
-      <div className="relative w-full max-w-2xl">
+    <div className="relative h-[350px] flex items-center justify-center" style={{ perspective: '1500px' }}>
+      <div className="relative w-full max-w-lg">
         {images.map((img, imgIndex) => {
           const isActiveImg = imgIndex === currentIndex;
-          const offset = (imgIndex - currentIndex) * 80;
-          const rotateX = (imgIndex - currentIndex) * -6;
-          const scale = 1 - Math.abs(imgIndex - currentIndex) * 0.06;
+          const offset = (imgIndex - currentIndex) * 40; // Reduced from 80 to 40
+          const rotateX = (imgIndex - currentIndex) * -4; // Reduced from -6 to -4
+          const scale = 1 - Math.abs(imgIndex - currentIndex) * 0.08; // Slightly more scale reduction
           const zIndex = images.length - Math.abs(imgIndex - currentIndex);
-          const opacity = 1 - Math.abs(imgIndex - currentIndex) * 0.12;
+          const opacity = 1 - Math.abs(imgIndex - currentIndex) * 0.15;
 
           return (
             <div
               key={imgIndex}
-              className="absolute left-1/2 top-1/2 w-full transition-all duration-700 ease-out"
+              className="absolute left-1/2 top-1/2 w-4/5 transition-all duration-700 ease-out" // Reduced width from full to 4/5
               style={{
                 transform: `translate(-50%, calc(-50% + ${offset}px)) rotateX(${rotateX}deg) scale(${scale})`,
                 transformStyle: 'preserve-3d',
@@ -692,33 +692,32 @@ function EventGallery({ event, isActive, index }) {
               }}
             >
               <div
-                className={`bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${
-                  isActive && isActiveImg ? 'ring-4 ring-cyan-400 shadow-cyan-500/25 scale-105' : 'ring-2 ring-gray-600/20'
+                className={`bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-300 ${
+                  isActive && isActiveImg ? 'ring-2 ring-cyan-400 shadow-cyan-500/20' : 'ring-1 ring-gray-600/20'
                 }`}
                 style={{
-                  boxShadow: `0 ${40 + imgIndex * 15}px ${80 + imgIndex * 15}px rgba(0, 0, 0, ${0.3 + imgIndex * 0.1})`
+                  boxShadow: `0 ${20 + imgIndex * 8}px ${40 + imgIndex * 8}px rgba(0, 0, 0, ${0.2 + imgIndex * 0.1})` // Reduced shadow
                 }}
               >
-                <div className="relative aspect-[16/9] overflow-hidden">
+                <div className="relative aspect-[4/3] overflow-hidden"> {/* Changed from 16/9 to 4/3 for smaller aspect ratio */}
                   <img src={img} alt={`${event.title} - Image ${imgIndex + 1}`} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/10 pointer-events-none"></div>
                 </div>
                 
                 {isActiveImg && (
-                  <div className="absolute top-6 right-6 w-4 h-4 bg-cyan-400 rounded-full shadow-lg animate-pulse"></div>
+                  <div className="absolute top-4 right-4 w-3 h-3 bg-cyan-400 rounded-full shadow-lg animate-pulse"></div> // Smaller indicator
                 )}
               </div>
             </div>
           );
         })}
 
-        {/* Background Glow */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-32 blur-3xl rounded-full bg-cyan-500/10" />
+        {/* Background Glow - Smaller */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-20 blur-2xl rounded-full bg-cyan-500/10" />
 
-        {/* Floating particles */}
-        <div className="absolute top-8 right-8 w-3 h-3 bg-cyan-400 rounded-full opacity-60 animate-bounce"></div>
-        <div className="absolute top-16 left-8 w-2 h-2 bg-blue-400 rounded-full opacity-50 animate-bounce"></div>
-        <div className="absolute bottom-16 right-12 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-40 animate-bounce"></div>
+        {/* Floating particles - Smaller and fewer */}
+        <div className="absolute top-6 right-6 w-2 h-2 bg-cyan-400 rounded-full opacity-60 animate-bounce"></div>
+        <div className="absolute top-12 left-6 w-1.5 h-1.5 bg-blue-400 rounded-full opacity-50 animate-bounce"></div>
       </div>
     </div>
   );
@@ -726,53 +725,53 @@ function EventGallery({ event, isActive, index }) {
   return (
     <div 
       id={event.galleryId}
-      className={`min-h-screen flex items-center justify-center py-16 transition-all duration-500 border-b border-cyan-500/10 ${
-        isActive ? 'opacity-100 scale-100 bg-cyan-500/5 rounded-3xl' : 'opacity-90 scale-100'
+      className={`min-h-[80vh] flex items-center justify-center py-12 transition-all duration-500 border-b border-cyan-500/10 ${
+        isActive ? 'opacity-100 scale-100 bg-cyan-500/5 rounded-2xl' : 'opacity-90 scale-100'
       }`}
     >
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div className={`space-y-8 transition-all duration-700 ${
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center"> {/* Reduced gap from 16 to 12 */}
+        <div className={`space-y-6 transition-all duration-700 ${
           isActive ? 'translate-x-0 opacity-100' : 'translate-x-0 opacity-100'
         }`}>
           <div>
-            <div className="text-cyan-400 text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-              <div className="w-6 h-px bg-cyan-400"></div>
+            <div className="text-cyan-400 text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
+              <div className="w-4 h-px bg-cyan-400"></div> {/* Smaller line */}
               Event Gallery {index + 1}
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent"> {/* Smaller text */}
               {event.title}
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-8">
+            <p className="text-gray-300 leading-relaxed mb-6"> {/* Smaller text */}
               Explore the visual journey of our {event.type.toLowerCase()}. This event brings together {event.participants}+ participants for {event.duration} of intensive learning and collaboration.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <div className="text-cyan-400 text-sm font-semibold">Event Type</div>
-              <div className="text-white text-lg">{event.type}</div>
+          <div className="grid grid-cols-2 gap-4"> {/* Smaller gap */}
+            <div className="space-y-1"> {/* Smaller spacing */}
+              <div className="text-cyan-400 text-xs font-semibold">Event Type</div> {/* Smaller text */}
+              <div className="text-white text-sm">{event.type}</div> {/* Smaller text */}
             </div>
-            <div className="space-y-2">
-              <div className="text-cyan-400 text-sm font-semibold">Duration</div>
-              <div className="text-white text-lg">{event.duration}</div>
+            <div className="space-y-1">
+              <div className="text-cyan-400 text-xs font-semibold">Duration</div>
+              <div className="text-white text-sm">{event.duration}</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-cyan-400 text-sm font-semibold">Participants</div>
-              <div className="text-white text-lg">{event.participants}+ developers</div>
+            <div className="space-y-1">
+              <div className="text-cyan-400 text-xs font-semibold">Participants</div>
+              <div className="text-white text-sm">{event.participants}+ developers</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-cyan-400 text-sm font-semibold">Level</div>
-              <div className="text-white text-lg">{event.level}</div>
+            <div className="space-y-1">
+              <div className="text-cyan-400 text-xs font-semibold">Level</div>
+              <div className="text-white text-sm">{event.level}</div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="text-cyan-400 text-sm font-semibold">Technologies Covered</div>
-            <div className="flex flex-wrap gap-2">
+          <div className="space-y-2"> {/* Smaller spacing */}
+            <div className="text-cyan-400 text-xs font-semibold">Technologies Covered</div> {/* Smaller text */}
+            <div className="flex flex-wrap gap-1"> {/* Smaller gap */}
               {event.techStack.map((tech, techIndex) => (
                 <span
                   key={techIndex}
-                  className="px-3 py-1 bg-cyan-500/10 text-cyan-300 text-sm rounded-full border border-cyan-500/20"
+                  className="px-2 py-1 bg-cyan-500/10 text-cyan-300 text-xs rounded-full border border-cyan-500/20" // Smaller badges
                 >
                   {tech}
                 </span>
@@ -790,14 +789,14 @@ function EventGallery({ event, isActive, index }) {
           />
           
           {/* Gallery Navigation Dots */}
-          <div className="flex justify-center mt-8 space-x-3">
+          <div className="flex justify-center mt-6 space-x-2"> {/* Smaller spacing */}
             {event.galleryImages.map((_, dotIndex) => (
               <button
                 key={dotIndex}
                 onClick={() => setCurrentImage(dotIndex)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   dotIndex === currentImage 
-                    ? 'bg-cyan-400 shadow-[0_0_10px_#00ffff] scale-125' 
+                    ? 'bg-cyan-400 shadow-[0_0_8px_#00ffff] scale-110' // Smaller glow
                     : 'bg-gray-600 hover:bg-cyan-200'
                 }`}
               />
