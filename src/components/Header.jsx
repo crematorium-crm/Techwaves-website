@@ -19,14 +19,11 @@ export default function Header() {
   }, [])
 
   const navItems = [
-    { name: 'Accueil', href: '/' },
-    { name: 'Inscription', href: '/register' },
-    { name: 'Histoire', href: '/history' },
-    { name: 'Équipe', href: '/team' },
-    { name: 'Projets', href: '/projects' },
-    { name: 'Certificats', href: '/certificates' },
-    { name: 'Événements', href: '/events' },
-    { name: 'Média', href: '/media' },
+    { name: 'Home', href: '/' },
+    { name: 'Registration', href: '/register' },
+    { name: 'History', href: '/history' },
+    { name: 'Our team', href: '/team' },
+    { name: 'Events', href: '/events' },
   ]
 
   return (
