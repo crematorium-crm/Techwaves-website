@@ -20,7 +20,6 @@ export default function Header() {
 
   const navItems = [
     { name: 'Home', href: '/' },
-    { name: 'Registration', href: '/register' },
     { name: 'History', href: '/history' },
     { name: 'Our team', href: '/team' },
     { name: 'Events', href: '/events' },
@@ -76,9 +75,26 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* CTA Desktop */}
+            {/* CTA Desktop - Register avec effet neon */}
             <div className="hidden lg:flex items-center">
-              
+              <Link 
+                href="/register" 
+                className="
+                  relative px-6 py-2.5 rounded-full text-sm font-semibold text-white
+                  bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600
+                  hover:from-blue-400 hover:via-cyan-300 hover:to-blue-500
+                  transition-all duration-300
+                  shadow-lg shadow-blue-500/40
+                  hover:shadow-blue-400/60
+                  hover:scale-105
+                  border border-cyan-300/30
+                  neon-glow
+                "
+              >
+                Join Now
+                {/* Effet de lueur supplémentaire */}
+                <div className="absolute inset-0 rounded-full bg-cyan-400/20 blur-md -z-10 animate-pulse"></div>
+              </Link>
             </div>
 
             {/* Menu Mobile Button */}
@@ -126,27 +142,28 @@ export default function Header() {
                   </Link>
                 ))}
                 
-                {/* CTA Mobile */}
+                {/* CTA Mobile avec le même effet neon */}
                 <Link 
                   href="/register" 
                   className="
                     mt-4 px-4 py-3 rounded-xl text-sm font-semibold text-white text-center
-                    bg-gradient-to-r from-blue-500 to-blue-600
-                    hover:from-blue-400 hover:to-blue-500
+                    bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600
+                    hover:from-blue-400 hover:via-cyan-300 hover:to-blue-500
                     transition-all duration-300
-                    shadow-lg shadow-blue-500/20
+                    shadow-lg shadow-blue-500/40
+                    border border-cyan-300/30
+                    relative overflow-hidden
                   "
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Rejoindre le Club
+                  Join Now
+                  <div className="absolute inset-0 bg-cyan-400/20 blur-sm -z-10"></div>
                 </Link>
               </nav>
             </div>
           </div>
         </div>
       </header>
-
-
     </>
   )
 }
