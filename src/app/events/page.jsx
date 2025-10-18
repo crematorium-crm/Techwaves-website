@@ -1,395 +1,810 @@
 "use client"
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
-import { useState } from 'react'
-import { Calendar, Clock, MapPin, User, Users, TrendingUp, Zap, Code, Cpu } from 'lucide-react'
+import { useEffect, useState, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronLeft, ChevronRight, Calendar, MapPin, Users, Clock, Cpu, Code2, Brain, Network, Sparkles, Zap, ArrowDown } from "lucide-react"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 export default function Events() {
-  const [hoveredEvent, setHoveredEvent] = useState(null)
-
-  const upcomingEvents = [
+  const slides = [
     {
-      title: "Workshop React Avancé",
-      date: "15 Déc 2024",
-      time: "14:00 - 17:00",
-      location: "Salle A12, ENSB",
-      type: "Workshop",
-      description: "Session avancée sur React 18, hooks personnalisés, et performance optimization",
-      speaker: "Zertit Dorsane",
-      capacity: 30,
-      registered: 28,
-      icon: Code
+      id: 1,
+      title: "TechWaves Open Day — Launching a New Chapter",
+      date: "October 15, 2024",
+      location: "TechHub Campus",
+      image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1200",
+      tech: ["AI", "Cloud", "Web3"],
     },
     {
-      title: "Hackathon Intelligence Artificielle",
-      date: "20-21 Déc 2024",
-      time: "09:00 - 18:00",
-      location: "Espace Innovation ENSB",
-      type: "Hackathon",
-      description: "48h de développement intensif autour des solutions IA et machine learning",
-      speaker: "Équipe AI Techwaves",
-      capacity: 120,
-      registered: 95,
-      icon: Cpu
+      id: 2,
+      title: "AI Nexus & DevFest Constantine Participation",
+      date: "December 10, 2024",
+      location: "Convention Center",
+      image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200",
+      tech: ["Machine Learning", "TensorFlow", "PyTorch"],
     },
     {
-      title: "Conférence Cloud Computing",
-      date: "10 Jan 2025",
-      time: "10:00 - 12:00",
-      location: "Amphithéâtre Principal",
-      type: "Conférence",
-      description: "Introduction aux technologies cloud et leur application dans les projets modernes",
-      speaker: "Expert Huawei Cloud",
-      capacity: 200,
-      registered: 150,
-      icon: Zap
-    }
+      id: 3,
+      title: "Hackathon: Graphic Design Challenge",
+      date: "February 19, 2025",
+      location: "Innovation Lab",
+      image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1200",
+      tech: ["Figma", "React", "Three.js"],
+    },
   ]
 
-  const pastEvents = [
+  const events = [
     {
-      title: "Workshop Débutant Web Development",
-      date: "15 Nov 2024",
-      participants: 45,
+      id: 1,
+      title: "Winter Waves Workshop — AI & Data Science",
+      date: "January 2025",
+      image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=800",
       type: "Workshop",
-      status: "Complété"
-    },
-    {
-      title: "Hackathon Innovation Digitale",
-      date: "25-26 Oct 2024",
       participants: 120,
+      duration: "3h",
+      level: "Beginner",
+      techStack: ["Python", "Pandas", "Scikit-learn"]
+    },
+    {
+      id: 2,
+      title: "Pass the Future — AI, Cybersecurity & Skills",
+      date: "May 2025",
+      image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=800",
+      type: "Conference",
+      participants: 300,
+      duration: "1 day",
+      level: "All Levels",
+      techStack: ["Blockchain", "Zero Trust", "Kubernetes"],
+      galleryId: "pass-future-gallery",
+      galleryImages: [
+        "/event/6026246722025539947.jpg",
+        "/event/6026246722025539946.jpg",
+        "/event/6026246722025539945.jpg",
+        "/event/6026246722025539944.jpg",
+        "/event/6026246722025539943.jpg",
+        "/event/6026246722025539942.jpg"
+      ]
+    },
+    {
+      id: 3,
+      title: "AITHON — AI Hackathon with UMCBot",
+      date: "April 2025",
+      image: "https://images.unsplash.com/photo-1581090700227-1e37b190418e?q=80&w=800",
       type: "Hackathon",
-      status: "Complété"
+      participants: 150,
+      duration: "48h",
+      level: "Advanced",
+      techStack: ["OpenAI API", "LangChain", "Vector DB"],
+      galleryId: "aithon-gallery",
+      galleryImages: [
+        "/event/UMCBot.jpg",
+        "/event/UMCBot2.jpg",
+        "/event/UMCBot3.jpg",
+        "/event/UMCBot4.jpg",
+        "/event/UMCBot5.jpg",
+        "/event/UMCBot6.jpg"
+      ]
     },
     {
-      title: "Conférence Cybersecurity",
-      date: "5 Sep 2024",
+      id: 4,
+      title: "Huawei ICT Academy — Cloud Infrastructure",
+      date: "September 2025",
+      image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=800",
+      type: "Partnership",
+      participants: 200,
+      duration: "2h",
+      level: "Intermediate",
+      techStack: ["Cloud Computing", "5G", "IoT"]
+    },
+    {
+      id: 5,
+      title: "Full-Stack Development Bootcamp",
+      date: "March 2025",
+      image: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=800",
+      type: "Bootcamp",
       participants: 80,
-      type: "Conférence",
-      status: "Complété"
+      duration: "5 days",
+      level: "Beginner",
+      techStack: ["Next.js", "Node.js", "PostgreSQL"]
     },
     {
-      title: "Atelier Design UI/UX",
-      date: "20 Jul 2024",
-      participants: 35,
+      id: 6,
+      title: "Blockchain & Web3 Summit 2025",
+      date: "June 2025",
+      image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=800",
+      type: "Summit",
+      participants: 250,
+      duration: "1 day",
+      level: "All Levels",
+      techStack: ["Solidity", "Smart Contracts", "DeFi"]
+    },
+    {
+      id: 7,
+      title: "Hackathon Graphic Design",
+      date: "July 2025",
+      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800",
       type: "Workshop",
-      status: "Complété"
+      participants: 60,
+      duration: "4h",
+      level: "Intermediate",
+      techStack: ["Figma", "Prototyping", "Design Systems"],
+      galleryId: "uiux-gallery",
+      galleryImages: [
+        "/event/hackaton.jpg",
+        "/event/hackaton2.jpg",
+        "/event/hackaton3.jpg",
+        "/event/hackaton4.jpg",
+        "/event/hackaton5.jpg",
+        "/event/hackaton6.jpg"
+      ]
+    },
+    {
+      id: 8,
+      title: "Tech Career Fair & Networking 2025",
+      date: "November 2025",
+      image: "https://images.unsplash.com/photo-1551833726-3a7b6d373bef?q=80&w=800",
+      type: "Career Fair",
+      participants: 500,
+      duration: "6h",
+      level: "All Levels",
+      techStack: ["Networking", "DevOps", "SRE"]
+    },
+    {
+      id: 9,
+      title: "Futur Caravan",
+      date: "August 2025",
+      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=800",
+      type: "Hackathon",
+      participants: 100,
+      duration: "24h",
+      level: "Intermediate",
+      techStack: ["React Native", "Flutter", "Firebase"],
+      galleryId: "mobile-challenge-gallery",
+      galleryImages: [
+        "/event/5987769557424653700.jpg",
+        "/event/5987769557424653706.jpg",
+        "/event/IMG_2144.jpg",
+        "/event/futur.jpg",
+        "/event/futur2.jpg",
+        "/event/futur3.jpg"
+      ]
+    },
+  ]
+
+  const [current, setCurrent] = useState(0)
+  const [direction, setDirection] = useState(1)
+  const [isHovering, setIsHovering] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [activeGallery, setActiveGallery] = useState(null)
+
+  const nextSlide = () => {
+    setDirection(1)
+    setCurrent((prev) => (prev + 1) % slides.length)
+  }
+
+  const prevSlide = () => {
+    setDirection(-1)
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length)
+  }
+
+  useEffect(() => {
+    if (isHovering) return
+    const interval = setInterval(() => {
+      setDirection(1)
+      setCurrent((prev) => (prev + 1) % slides.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [slides.length, isHovering])
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 40,
+        y: (e.clientY / window.innerHeight - 0.5) * 40,
+      })
     }
-  ]
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [])
 
-  const eventStats = [
-    { number: "12", label: "Événements Organisés", icon: Calendar },
-    { number: "500+", label: "Participants Totaux", icon: Users },
-    { number: "15", label: "Intervenants Experts", icon: User },
-    { number: "3", label: "Types d'Événements", icon: TrendingUp }
-  ]
-
-  const getEventTypeColor = (type) => {
-    switch (type) {
-      case "Workshop": return "from-blue-600 via-blue-500 to-cyan-500"
-      case "Hackathon": return "from-cyan-600 via-cyan-500 to-blue-400"
-      case "Conférence": return "from-blue-500 via-cyan-500 to-cyan-400"
-      default: return "from-blue-600 to-cyan-600"
+  const scrollToGallery = (galleryId) => {
+    if (!galleryId) return;
+    
+    setActiveGallery(galleryId)
+    const element = document.getElementById(galleryId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }
 
+  const slideVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 400 : -400,
+      opacity: 0,
+      scale: 0.98,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 1.2,
+        ease: [0.25, 1, 0.5, 1],
+      },
+    },
+    exit: (direction) => ({
+      x: direction > 0 ? -400 : 400,
+      opacity: 0,
+      scale: 0.98,
+      transition: { duration: 1, ease: [0.4, 0, 0.2, 1] },
+    }),
+  }
+
+  // Tech badges avec couleurs différentes
+  const getTechColor = (tech) => {
+    const colors = {
+      "AI": "from-purple-500/20 to-pink-500/20 border-purple-500/30 text-purple-300",
+      "Cloud": "from-blue-500/20 to-cyan-500/20 border-blue-500/30 text-blue-300",
+      "Web3": "from-orange-500/20 to-red-500/20 border-orange-500/30 text-orange-300",
+      "Machine Learning": "from-green-500/20 to-emerald-500/20 border-green-500/30 text-green-300",
+      "React": "from-cyan-500/20 to-blue-500/20 border-cyan-500/30 text-cyan-300",
+      "Blockchain": "from-yellow-500/20 to-amber-500/20 border-yellow-500/30 text-yellow-300",
+      "default": "from-gray-500/20 to-gray-600/20 border-gray-500/30 text-gray-300"
+    }
+    
+    for (const [key, value] of Object.entries(colors)) {
+      if (tech.includes(key)) return value
+    }
+    return colors.default
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
-        <div className="absolute top-1/3 -right-48 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse delay-2000"></div>
+    <div className="relative min-h-screen text-white font-sans overflow-hidden">
+      {/* 🌊 FOND ORIGINAL AVEC VAGUES POUR TOUTE LA PAGE */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Gradient base with pulsation */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#030617] via-[#04112b] to-[#020617] animate-techwave-gradient" />
+
+        {/* Soft glowing halo following mouse */}
+        <div
+          className="absolute w-[50rem] h-[50rem] bg-cyan-500/10 blur-[160px] rounded-full mix-blend-screen pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate(${mousePos.x}px, ${mousePos.y}px)`,
+          }}
+        />
+
+        {/* Moving waves (faded) */}
+        <div className="absolute inset-0 opacity-70 mix-blend-screen">
+          <svg
+            className="absolute bottom-0 w-[200%] h-[130%] animate-wave-move"
+            viewBox="0 0 1200 400"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,220 C400,120 800,280 1200,180 L1200,400 L0,400 Z"
+              fill="url(#grad1)"
+              style={{ opacity: 0.35 }}
+            />
+            <defs>
+              <linearGradient id="grad1" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stopColor="#00eaff" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="#0077ff" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#00eaff" stopOpacity="0.4" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <svg
+            className="absolute bottom-0 w-[200%] h-[150%] animate-wave-move-slow"
+            viewBox="0 0 1200 400"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0,260 C400,360 800,120 1200,320 L1200,400 L0,400 Z"
+              fill="url(#grad2)"
+              style={{ opacity: 0.25 }}
+            />
+            <defs>
+              <linearGradient id="grad2" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stopColor="#00c3ff" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#005eff" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#00c3ff" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        {/* Reflective light lines */}
+        <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent animate-shimmer" />
+        <div className="absolute inset-x-0 bottom-1/3 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent animate-shimmer-slow" />
       </div>
 
-      {/* Grid Pattern Overlay */}
-      <div className="fixed inset-0 pointer-events-none" style={{
-        backgroundImage: `linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px)`,
-        backgroundSize: '50px 50px'
-      }}></div>
       <Header />
-      <main className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-        
-        <div className="max-w-7xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-16 relative">
-            <div className="inline-block mb-6">
-              <div className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 border border-cyan-500/20 rounded-full shadow-lg shadow-cyan-500/10">
-                <Calendar className="w-5 h-5 text-cyan-400" />
-                <span className="text-cyan-300 font-medium">Agenda 2024-2025</span>
-              </div>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                Événements Tech
-              </span>
-            </h1>
-            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-              Rejoignez-nous pour des expériences technologiques inoubliables. 
-              Workshops, hackathons et conférences avec les meilleurs experts du domaine.
-            </p>
-          </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-20">
-            {eventStats.map((stat, index) => {
-              const Icon = stat.icon
-              return (
-                <div 
-                  key={index} 
-                  className="group relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/5 group-hover:to-blue-500/5 rounded-2xl transition-all duration-500"></div>
-                  <div className="relative">
-                    <Icon className="w-8 h-8 text-cyan-400 mb-4 group-hover:scale-110 transition-transform duration-300" />
-                    <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
-                      {stat.number}
-                    </div>
-                    <div className="text-slate-400 text-sm font-medium">{stat.label}</div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Upcoming Events */}
-          <div className="mb-20">
-            <div className="flex items-center gap-4 mb-10">
-              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  Prochains Événements
-                </span>
-              </h2>
-              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {upcomingEvents.map((event, index) => {
-                const Icon = event.icon
-                const progress = (event.registered / event.capacity) * 100
-                
-                return (
-                  <div 
-                    key={index}
-                    onMouseEnter={() => setHoveredEvent(index)}
-                    onMouseLeave={() => setHoveredEvent(null)}
-                    className="group relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-3xl overflow-hidden border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20"
-                  >
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-cyan-500/0 group-hover:from-cyan-500/10 group-hover:via-blue-500/5 group-hover:to-cyan-500/10 transition-all duration-700"></div>
-                    
-                    {/* Header with gradient */}
-                    <div className={`relative h-48 bg-gradient-to-br ${getEventTypeColor(event.type)} overflow-hidden`}>
-                      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                        <div className="relative mb-4">
-                          <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
-                          <div className="relative bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20 group-hover:scale-110 transition-transform duration-300">
-                            <Icon className="w-10 h-10" />
-                          </div>
-                        </div>
-                        <span className="text-lg font-semibold tracking-wide">{event.type}</span>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <span className="px-4 py-1.5 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 rounded-full text-sm font-medium border border-cyan-500/30">
-                          {event.type}
-                        </span>
-                        <div className="flex items-center gap-2 text-slate-400">
-                          <Calendar className="w-4 h-4" />
-                          <span className="text-sm font-medium">{event.date}</span>
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors duration-300">
-                        {event.title}
-                      </h3>
-                      
-                      <p className="text-slate-400 mb-6 leading-relaxed">
-                        {event.description}
-                      </p>
-
-                      {/* Event Details */}
-                      <div className="space-y-3 mb-6">
-                        <div className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors">
-                          <Clock className="w-4 h-4 text-cyan-500" />
-                          <span className="text-sm">{event.time}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors">
-                          <MapPin className="w-4 h-4 text-cyan-500" />
-                          <span className="text-sm">{event.location}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-colors">
-                          <User className="w-4 h-4 text-cyan-500" />
-                          <span className="text-sm">{event.speaker}</span>
-                        </div>
-                      </div>
-
-                      {/* Registration Progress */}
-                      <div className="mb-6">
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="text-slate-400 font-medium">Inscriptions</span>
-                          <span className="text-cyan-400 font-bold">{event.registered}/{event.capacity}</span>
-                        </div>
-                        <div className="relative h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                          <div 
-                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-1000 ease-out"
-                            style={{ 
-                              width: `${progress}%`,
-                              boxShadow: hoveredEvent === index ? '0 0 20px rgba(6, 182, 212, 0.5)' : 'none'
-                            }}
-                          >
-                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                          </div>
-                        </div>
-                        {progress > 90 && (
-                          <p className="text-xs text-amber-400 mt-2 font-medium">⚠️ Places limitées !</p>
-                        )}
-                      </div>
-
-                      {/* CTA Button */}
-                      <button className="w-full relative group/btn overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/50">
-                        <span className="relative z-10">S'inscrire Maintenant</span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                      </button>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Past Events */}
-          <div className="mb-20">
-            <div className="flex items-center gap-4 mb-10">
-              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
-                <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                  Événements Passés
-                </span>
-              </h2>
-              <div className="h-1 flex-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-            </div>
-
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-3xl overflow-hidden border border-slate-700/50">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-700">
-                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
-                        Événement
-                      </th>
-                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
-                        Date
-                      </th>
-                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
-                        Type
-                      </th>
-                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
-                        Participants
-                      </th>
-                      <th className="px-6 py-5 text-left text-sm font-semibold text-cyan-400 uppercase tracking-wider">
-                        Statut
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700/50">
-                    {pastEvents.map((event, index) => (
-                      <tr key={index} className="hover:bg-slate-800/50 transition-colors duration-300 group">
-                        <td className="px-6 py-5">
-                          <div className="text-sm font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                            {event.title}
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="text-sm text-slate-400">
-                            {event.date}
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="px-3 py-1.5 text-xs bg-gradient-to-r from-slate-700 to-slate-600 text-slate-300 rounded-full border border-slate-600 font-medium">
-                            {event.type}
-                          </span>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-2 text-sm text-slate-400">
-                            <Users className="w-4 h-4 text-cyan-500" />
-                            <span>{event.participants}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="px-3 py-1.5 text-xs bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/30 font-medium">
-                            ✓ {event.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          {/* Newsletter Section */}
-          <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-3xl p-10 md:p-14 border border-slate-700/50 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-blue-500/5 to-transparent"></div>
-            <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-3xl"></div>
-            
-            <div className="relative text-center">
-              <div className="inline-block mb-6">
-                <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-4 rounded-2xl border border-cyan-500/30">
-                  <Zap className="w-12 h-12 text-cyan-400" />
-                </div>
-              </div>
-              
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  Restez Connecté
-                </span>
-              </h3>
-              
-              <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-                Recevez en avant-première les annonces d'événements, les invitations exclusives 
-                et les dernières actualités tech directement dans votre boîte mail.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
-                <input
-                  type="email"
-                  placeholder="votre@email.com"
-                  className="flex-1 px-6 py-4 bg-slate-900/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-slate-500 outline-none transition-all duration-300"
-                />
-                <button className="relative group/sub overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50">
-                  <span className="relative z-10">S'abonner</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover/sub:opacity-100 transition-opacity duration-300"></div>
-                </button>
-              </div>
-            </div>
+      {/* MAIN TITLE */}
+      <motion.section 
+        className="max-w-6xl mx-auto mt-20 px-6 text-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="flex justify-center mb-4">
+          <div className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
+            <Zap size={16} className="text-cyan-400" />
+            <span className="text-cyan-400 text-sm font-semibold">TECH COMMUNITY</span>
           </div>
         </div>
-        <Footer />
-      </main>
 
+        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent mb-4">
+          TechWaves Events
+        </h1>
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          Where innovation meets community. Explore cutting-edge tech events, workshops, and hackathons.
+        </p>
+
+        {/* Tech Stats */}
+        <motion.div 
+          className="flex justify-center gap-8 mt-8 text-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <div className="text-center">
+            <div className="text-2xl font-bold text-cyan-400">50+</div>
+            <div className="text-gray-400">Tech Events</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-400">2K+</div>
+            <div className="text-gray-400">Developers</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-400">15+</div>
+            <div className="text-gray-400">Technologies</div>
+          </div>
+        </motion.div>
+      </motion.section>
+
+      {/* FEATURED EVENTS */}
+      <motion.div 
+        className="max-w-6xl mx-auto mt-16 px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+              <div className="w-1 h-8 bg-cyan-400 rounded-full"></div>
+              Featured Events
+            </h2>
+            <p className="text-gray-400 text-lg">Cutting-edge tech experiences</p>
+          </div>
+          <div className="flex items-center gap-2 text-cyan-400">
+            <Cpu size={20} />
+            <span className="text-sm font-semibold">LIVE</span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* CAROUSEL WITH TECH BADGES */}
+      <section
+        className="relative mt-8 max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-cyan-500/20 backdrop-blur-sm"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <div className="relative w-full h-[450px]">
+          <AnimatePresence custom={direction} mode="wait">
+            <motion.div
+              key={slides[current].id}
+              className="absolute w-full h-full"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+            >
+              <img
+                src={slides[current].image}
+                alt={slides[current].title}
+                className="w-full h-full object-cover select-none"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Slide info with tech badges */}
+        <div className="absolute bottom-6 left-6 right-6">
+          <motion.div
+            key={slides[current].id}
+            className="bg-black/60 p-6 rounded-xl backdrop-blur-md border border-cyan-500/20"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="flex items-center gap-4 text-cyan-400 mb-3 text-sm">
+              <div className="flex items-center gap-1">
+                <Calendar size={14} />
+                <span>{slides[current].date}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MapPin size={14} />
+                <span>{slides[current].location}</span>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white leading-tight mb-3">
+              {slides[current].title}
+            </h2>
+
+            {/* Tech Stack Badges */}
+            <div className="flex flex-wrap gap-2">
+              {slides[current].tech.map((tech, index) => (
+                <span
+                  key={index}
+                  className={`px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r ${getTechColor(tech)} border backdrop-blur-sm`}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Nav buttons */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-cyan-500/30 p-3 rounded-xl backdrop-blur-md border border-cyan-500/20 transition-all duration-200 hover:scale-110"
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-cyan-500/30 p-3 rounded-xl backdrop-blur-md border border-cyan-500/20 transition-all duration-200 hover:scale-110"
+        >
+          <ChevronRight size={20} />
+        </button>
+
+        {/* Dots */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 backdrop-blur-md bg-black/30 p-2 rounded-xl border border-cyan-500/20">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setDirection(i > current ? 1 : -1)
+                setCurrent(i)
+              }}
+              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                i === current ? "bg-cyan-400 shadow-[0_0_10px_#00ffff]" : "bg-gray-500/70 hover:bg-cyan-200"
+              }`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ALL EVENTS */}
+      <motion.div 
+        className="max-w-6xl mx-auto mt-20 px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+      >
+        <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+          <div className="w-1 h-8 bg-cyan-400 rounded-full"></div>
+          Tech Events Calendar
+        </h2>
+        <p className="text-gray-400 text-lg">Click on any event to view its dedicated gallery</p>
+      </motion.div>
+
+      {/* ENHANCED GRID WITH TECH STACK */}
+      <section className="max-w-6xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+        {events.map((event) => (
+          <motion.div
+            key={event.id}
+            className={`group relative bg-gradient-to-br from-[#0b1220] to-[#071832] border border-cyan-800/30 rounded-xl overflow-hidden shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm ${
+              event.galleryId ? 'cursor-pointer' : 'cursor-default'
+            }`}
+            whileHover={{ scale: event.galleryId ? 1.02 : 1 }}
+            onClick={() => event.galleryId && scrollToGallery(event.galleryId)}
+          >
+            {/* Tech Level Badge */}
+            <div className={`absolute top-3 left-3 z-10 px-2 py-1 text-xs font-semibold rounded-full border backdrop-blur-sm ${
+              event.level === "Beginner" ? "bg-green-500/20 border-green-500/30 text-green-300" :
+              event.level === "Intermediate" ? "bg-yellow-500/20 border-yellow-500/30 text-yellow-300" :
+              "bg-red-500/20 border-red-500/30 text-red-300"
+            }`}>
+              {event.level}
+            </div>
+
+            {/* Click to Gallery Indicator - Only show if gallery exists */}
+            {event.galleryId && (
+              <div className="absolute top-3 right-3 z-10">
+                <div className="flex items-center gap-1 px-2 py-1 bg-cyan-500/20 text-cyan-300 text-xs font-semibold rounded border border-cyan-500/30 backdrop-blur-sm">
+                  <ArrowDown size={10} />
+                  <span>View Gallery</span>
+                </div>
+              </div>
+            )}
+
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={event.image}
+                alt={event.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                loading="lazy"
+              />
+              <div className="absolute top-12 right-3">
+                <span className="px-2 py-1 bg-cyan-500/20 text-cyan-300 text-xs font-semibold rounded border border-cyan-500/30 backdrop-blur-sm">
+                  {event.type}
+                </span>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            </div>
+
+            <div className="p-5">
+              <p className="text-cyan-400 text-sm font-semibold mb-2 flex items-center gap-1">
+                <Calendar size={12} />
+                {event.date}
+              </p>
+              <h3 className="text-lg font-bold text-white leading-tight mb-3 group-hover:text-cyan-200 transition-colors">
+                {event.title}
+              </h3>
+
+              {/* Tech Stack */}
+              <div className="flex flex-wrap gap-1 mb-3">
+                {event.techStack.slice(0, 3).map((tech, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 text-xs bg-gray-800/50 text-gray-300 rounded border border-gray-700/50"
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {event.techStack.length > 3 && (
+                  <span className="px-2 py-1 text-xs bg-gray-800/50 text-gray-400 rounded border border-gray-700/50">
+                    +{event.techStack.length - 3}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                <div className="flex items-center gap-1">
+                  <Users size={14} />
+                  <span>{event.participants}+</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock size={14} />
+                  <span>{event.duration}</span>
+                </div>
+              </div>
+
+              <button className={`w-full px-4 py-2 border border-cyan-500/40 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                event.galleryId 
+                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 hover:shadow-lg hover:shadow-cyan-500/25'
+                  : 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+              }`}>
+                <Code2 size={14} className="inline mr-2" />
+                {event.galleryId ? 'View Event Gallery' : 'Gallery Coming Soon'}
+              </button>
+            </div>
+
+            {/* Hover Glow Effect */}
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+              <div className="absolute inset-0 bg-cyan-500/10 blur-xl rounded-xl" />
+            </div>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* GALLERIES SECTION TITLE */}
+      <motion.div 
+        className="max-w-7xl mx-auto mt-20 px-6 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.7 }}
+      >
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent mb-4">
+          Event Galleries
+        </h2>
+        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          Explore the visual journey of each event through our interactive galleries
+        </p>
+      </motion.div>
+
+      {/* INDIVIDUAL EVENT GALLERIES - ALWAYS VISIBLE */}
+      <section className="max-w-7xl mx-auto px-6 py-10">
+        {events.map((event, index) => (
+          event.galleryId && (
+            <EventGallery
+              key={event.id}
+              event={event}
+              isActive={activeGallery === event.galleryId}
+              index={index}
+            />
+          )
+        ))}
+      </section>
+
+      <Footer />
+
+      {/* Styles */}
       <style jsx>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.1; }
-          50% { opacity: 0.15; }
+        @keyframes techwave-gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
-        .animate-pulse {
-          animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .animate-techwave-gradient {
+          background-size: 200% 200%;
+          animation: techwave-gradient 18s ease-in-out infinite;
         }
-        .delay-1000 {
-          animation-delay: 1s;
+        @keyframes wave-move {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        .delay-2000 {
-          animation-delay: 2s;
+        .animate-wave-move { animation: wave-move 16s linear infinite; }
+        .animate-wave-move-slow { animation: wave-move 26s linear infinite reverse; }
+        @keyframes shimmer {
+          0% { opacity: 0; transform: translateX(-100%); }
+          50% { opacity: 1; transform: translateX(0); }
+          100% { opacity: 0; transform: translateX(100%); }
         }
+        .animate-shimmer { animation: shimmer 10s ease-in-out infinite; }
+        .animate-shimmer-slow { animation: shimmer 18s ease-in-out infinite; }
       `}</style>
     </div>
   )
+}
+
+// Individual Event Gallery Component - Always Visible
+function EventGallery({ event, isActive, index }) {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % event.galleryImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [event.galleryImages.length]);
+
+  const FloatingLayers = ({ images, currentIndex }) => (
+    <div className="relative h-[500px] flex items-center justify-center" style={{ perspective: '2000px' }}>
+      <div className="relative w-full max-w-2xl">
+        {images.map((img, imgIndex) => {
+          const isActiveImg = imgIndex === currentIndex;
+          const offset = (imgIndex - currentIndex) * 80;
+          const rotateX = (imgIndex - currentIndex) * -6;
+          const scale = 1 - Math.abs(imgIndex - currentIndex) * 0.06;
+          const zIndex = images.length - Math.abs(imgIndex - currentIndex);
+          const opacity = 1 - Math.abs(imgIndex - currentIndex) * 0.12;
+
+          return (
+            <div
+              key={imgIndex}
+              className="absolute left-1/2 top-1/2 w-full transition-all duration-700 ease-out"
+              style={{
+                transform: `translate(-50%, calc(-50% + ${offset}px)) rotateX(${rotateX}deg) scale(${scale})`,
+                transformStyle: 'preserve-3d',
+                zIndex: zIndex,
+                opacity: opacity,
+              }}
+            >
+              <div
+                className={`bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${
+                  isActive && isActiveImg ? 'ring-4 ring-cyan-400 shadow-cyan-500/25 scale-105' : 'ring-2 ring-gray-600/20'
+                }`}
+                style={{
+                  boxShadow: `0 ${40 + imgIndex * 15}px ${80 + imgIndex * 15}px rgba(0, 0, 0, ${0.3 + imgIndex * 0.1})`
+                }}
+              >
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <img src={img} alt={`${event.title} - Image ${imgIndex + 1}`} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none"></div>
+                </div>
+                
+                {isActiveImg && (
+                  <div className="absolute top-6 right-6 w-4 h-4 bg-cyan-400 rounded-full shadow-lg animate-pulse"></div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Background Glow */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-32 blur-3xl rounded-full bg-cyan-500/10" />
+
+        {/* Floating particles */}
+        <div className="absolute top-8 right-8 w-3 h-3 bg-cyan-400 rounded-full opacity-60 animate-bounce"></div>
+        <div className="absolute top-16 left-8 w-2 h-2 bg-blue-400 rounded-full opacity-50 animate-bounce"></div>
+        <div className="absolute bottom-16 right-12 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-40 animate-bounce"></div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div 
+      id={event.galleryId}
+      className={`min-h-screen flex items-center justify-center py-16 transition-all duration-500 border-b border-cyan-500/10 ${
+        isActive ? 'opacity-100 scale-100 bg-cyan-500/5 rounded-3xl' : 'opacity-90 scale-100'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div className={`space-y-8 transition-all duration-700 ${
+          isActive ? 'translate-x-0 opacity-100' : 'translate-x-0 opacity-100'
+        }`}>
+          <div>
+            <div className="text-cyan-400 text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+              <div className="w-6 h-px bg-cyan-400"></div>
+              Event Gallery {index + 1}
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              {event.title}
+            </h2>
+            <p className="text-gray-300 text-lg leading-relaxed mb-8">
+              Explore the visual journey of our {event.type.toLowerCase()}. This event brings together {event.participants}+ participants for {event.duration} of intensive learning and collaboration.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <div className="text-cyan-400 text-sm font-semibold">Event Type</div>
+              <div className="text-white text-lg">{event.type}</div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-cyan-400 text-sm font-semibold">Duration</div>
+              <div className="text-white text-lg">{event.duration}</div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-cyan-400 text-sm font-semibold">Participants</div>
+              <div className="text-white text-lg">{event.participants}+ developers</div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-cyan-400 text-sm font-semibold">Level</div>
+              <div className="text-white text-lg">{event.level}</div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="text-cyan-400 text-sm font-semibold">Technologies Covered</div>
+            <div className="flex flex-wrap gap-2">
+              {event.techStack.map((tech, techIndex) => (
+                <span
+                  key={techIndex}
+                  className="px-3 py-1 bg-cyan-500/10 text-cyan-300 text-sm rounded-full border border-cyan-500/20"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className={`transition-all duration-700 ${
+          isActive ? 'translate-x-0 opacity-100' : 'translate-x-0 opacity-100'
+        }`}>
+          <FloatingLayers 
+            images={event.galleryImages} 
+            currentIndex={currentImage} 
+          />
+          
+          {/* Gallery Navigation Dots */}
+          <div className="flex justify-center mt-8 space-x-3">
+            {event.galleryImages.map((_, dotIndex) => (
+              <button
+                key={dotIndex}
+                onClick={() => setCurrentImage(dotIndex)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  dotIndex === currentImage 
+                    ? 'bg-cyan-400 shadow-[0_0_10px_#00ffff] scale-125' 
+                    : 'bg-gray-600 hover:bg-cyan-200'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
