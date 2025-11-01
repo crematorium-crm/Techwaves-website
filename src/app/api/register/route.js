@@ -1,160 +1,53 @@
 import { NextResponse } from 'next/server'
-import { writeFile, appendFile, mkdir } from 'fs/promises'
-import path from 'path'
-import fs from 'fs'
+import { google } from 'googleapis'
 
 export async function POST(request) {
-  console.log('🚀 API Route appelée!')
-  
   try {
-    const formData = await request.json()
-    console.log('📨 Données reçues:', formData)
+    const data = await request.json()
     
-    // AJOUT: Inclure university et field dans les champs requis
-    const requiredFields = ['firstName', 'lastName', 'email', 'department', 'motivation', 'university', 'field']
-    const missingFields = requiredFields.filter(field => !formData[field])
-    
-    if (missingFields.length > 0) {
-      console.log('❌ Champs manquants:', missingFields)
-      return NextResponse.json(
-        { error: `Missing fields: ${missingFields.join(', ')}` },
-        { status: 400 }
-      )
-    }
-
-    // Préparer les données avec les nouveaux champs
-    const registrationData = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      ...formData,
-      status: 'pending',
-      interviewScheduled: false
-    }
-
-    console.log('💾 Données à sauvegarder:', registrationData)
-
-    // Créer le dossier data
-    const dataDir = path.join(process.cwd(), 'data_resgister')
-    console.log('📁 Dossier data:', dataDir)
-    
-    try {
-      await mkdir(dataDir, { recursive: true })
-      console.log('✅ Dossier data créé/vérifié')
-    } catch (dirError) {
-      console.error('❌ Erreur dossier:', dirError)
-    }
-
-    // Chemin du fichier JSON
-    const filePath = path.join(dataDir, 'registrations.json')
-    console.log('📄 Fichier JSON:', filePath)
-
-    // Lire ou créer le fichier
-    let existingData = []
-    try {
-      if (fs.existsSync(filePath)) {
-        console.log('📖 Fichier existe, lecture...')
-        const fileContent = await fs.promises.readFile(filePath, 'utf8')
-        existingData = JSON.parse(fileContent)
-        console.log(`📊 ${existingData.length} inscriptions existantes`)
-      } else {
-        console.log('🆕 Fichier n existe pas, création...')
-      }
-    } catch (readError) {
-      console.error('❌ Erreur lecture:', readError)
-    }
-
-    // Ajouter nouvelle inscription
-    existingData.push(registrationData)
-    console.log('➕ Nouvelle inscription ajoutée')
-
-    // Sauvegarder
-    try {
-      await writeFile(filePath, JSON.stringify(existingData, null, 2))
-      console.log('💾 Fichier JSON sauvegardé')
-    } catch (writeError) {
-      console.error('❌ Erreur sauvegarde JSON:', writeError)
-    }
-
-    // Sauvegarder en CSV
-    try {
-      await saveToCSV(registrationData)
-      console.log('📊 Fichier CSV mis à jour')
-    } catch (csvError) {
-      console.error('❌ Erreur CSV:', csvError)
-    }
-
-    return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Application submitted successfully!',
-        id: registrationData.id
+    // Configuration Google Sheets
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       },
-      { status: 201 }
-    )
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    })
 
-  } catch (error) {
-    console.error('💥 Erreur générale:', error)
-    return NextResponse.json(
-      { error: 'Internal server error: ' + error.message },
-      { status: 500 }
-    )
-  }
-}
+    const sheets = google.sheets({ version: 'v4', auth })
+    const spreadsheetId = process.env.GOOGLE_SHEET_ID
 
-// Mettre à jour la fonction saveToCSV avec les nouveaux champs
-async function saveToCSV(data) {
-  try {
-    const csvDir = path.join(process.cwd(), 'data_resgister')
-    const csvPath = path.join(csvDir, 'registrations.csv')
-    
-    const csvLine = [
-      data.id,
-      data.timestamp,
-      `"${data.firstName}"`,
-      `"${data.lastName}"`,
-      `"${data.email}"`,
+    // Préparer les données
+    const row = [
+      new Date().toISOString(),
+      data.firstName,
+      data.lastName,
+      data.email,
       data.phone || '',
-      `"${data.university}"`,          // AJOUT: University
-      `"${data.field}"`,               // AJOUT: Field of Study
-      `"${data.department}"`,
+      data.university,
+      data.field,
+      data.department,
       data.studyLevel || '',
-      `"${data.motivation.replace(/"/g, '""')}"`,
-      data.newsletter ? 'yes' : 'no',
-      data.status
-    ].join(',') + '\n'
+      data.motivation,
+      data.newsletter ? 'Yes' : 'No',
+      'Pending'
+    ]
 
-    if (!fs.existsSync(csvPath)) {
-      // AJOUT: University et Field dans l'en-tête
-      const header = 'ID,Timestamp,First Name,Last Name,Email,Phone,University,Field of Study,Department,Study Level,Motivation,Newsletter,Status\n'
-      await writeFile(csvPath, header)
-    }
+    // Ajouter à Google Sheets
+    await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: 'Registrations!A:L',
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: [row],
+      },
+    })
 
-    await appendFile(csvPath, csvLine)
+    return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {
-    console.error('❌ Erreur sauvegarde CSV:', error)
-    throw error
-  }
-}
-
-export async function GET() {
-  console.log('📭 GET request reçue')
-  try {
-    const filePath = path.join(process.cwd(), 'data', 'registrations.json')
-    
-    if (!fs.existsSync(filePath)) {
-      console.log('📭 Aucun fichier trouvé, retourne tableau vide')
-      return NextResponse.json([])
-    }
-
-    const fileContent = await fs.promises.readFile(filePath, 'utf8')
-    const data = JSON.parse(fileContent)
-    console.log(`📊 ${data.length} inscriptions retournées`)
-    
-    return NextResponse.json(data)
-  } catch (error) {
-    console.error('❌ Erreur GET:', error)
+    console.error('Google Sheets Error:', error)
     return NextResponse.json(
-      { error: 'Read error' },
+      { error: 'Failed to save to Google Sheets' },
       { status: 500 }
     )
   }
