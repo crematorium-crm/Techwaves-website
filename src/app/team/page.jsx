@@ -145,12 +145,140 @@ const TeamShowcase = () => {
     { 
       id: 9, 
       name: 'Mohamed abderahman', 
-      role: 'CO-Leader of Graphic Design Department', 
+      role: 'Leader of Graphic Design Department', 
       department: 'Visual Content Creator',
       linkedin: 'https://linkedin.com/in/maram',
       image: '/team/abdou2.jpg',
       color: 'from-blue-500 to-cyan-600' 
-    }
+    },
+    { 
+      id: 10, 
+      name: 'zendaoui rahma douaa', 
+      role: 'IT & Development Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/rahma.jpg',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 11, 
+      name: 'Nada cheghib', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/nada.png',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 12, 
+      name: 'Ikhlef rym', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/IKHLEFRYM.JPG',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 13, 
+      name: 'Rahmani Yasmine', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/yasmine.JPG',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 14, 
+      name: 'Rahmani Yasmine', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/yasmine.JPG',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 15, 
+      name: 'Hamidane Yacine', 
+      role: 'IT & Development Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/yasine.JPG',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 16, 
+      name: 'Mansouri Ahmed', 
+      role: 'IT & Development Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/ahmed.png',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 17, 
+      name: 'Addoun Khaled', 
+      role: 'IT & Development Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/khaled2.jpg',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 19, 
+      name: 'Belaribi Feriel', 
+      role: 'IT & Development Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/feriel.jpg',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 20, 
+      name: 'Bouchareb Mouad', 
+      role: 'Content Creation Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/mouad.jpg',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    
+    { 
+      id: 22, 
+      name: 'Kharoubi malak', 
+      role: 'Media & Marketing Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/malakkh.jpg',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 23, 
+      name: 'Kerkar Sahar', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/sahar.png',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 24, 
+      name: 'Khattab hadjer', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/hadjer.png',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+    { 
+      id: 25, 
+      name: 'Maram otmane', 
+      role: 'Human Resources Department', 
+      department: 'Visual Content Creator',
+      linkedin: 'https://linkedin.com/in/maram',
+      image: '/team/maram.jpg',
+      color: 'from-blue-500 to-cyan-600' 
+    },
+
   ];
 
   const departments = [
