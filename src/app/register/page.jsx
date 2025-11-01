@@ -109,9 +109,10 @@ export default function Register() {
         <div className="rounded-2xl p-8 backdrop-blur-md bg-slate-900/70 shadow-2xl shadow-blue-500/10 border border-slate-600/50">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mx-auto mb-4">
-              <div className="w-24 h-24 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-4xl font-bold text-white">
-                TW
-              </div>
+              <div className="flex items-center justify-center mx-auto mb-4">
+    {/* Remplace par ton logo sans fond */}
+    <img src="/techwaveslogo.png" alt="Techwaves" className="h-30 w-auto" />
+  </div>
             </div>
             <div className="inline-block border border-cyan-400/30 rounded-full px-6 py-2 mb-3">
               <p className="text-cyan-400 text-sm font-medium tracking-wide">Membership Application</p>
@@ -205,7 +206,7 @@ export default function Register() {
 
             <div>
               <label htmlFor="university" className="block text-sm font-semibold text-gray-300 mb-3">
-                University *
+                University
               </label>
               <input
                 id="university"
@@ -213,7 +214,7 @@ export default function Register() {
                 type="text"
                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-xl focus:ring-2 focus:ring-cyan-400 focus:border-transparent text-white placeholder-slate-400 transition-all duration-300 backdrop-blur-sm hover:border-cyan-400/50"
                 placeholder="Your university"
-                required
+                
               />
             </div>
 
