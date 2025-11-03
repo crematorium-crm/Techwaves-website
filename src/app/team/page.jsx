@@ -683,7 +683,7 @@ const TeamShowcase = () => {
                             />
                             {/* Fallback display */}
                             <div className="absolute inset-0 flex items-center justify-center text-4xl md:text-6xl">
-                              👤
+                              
                             </div>
                           </div>
                           
