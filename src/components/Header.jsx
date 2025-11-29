@@ -1,10 +1,135 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import techwaveswhite from '../assets/techwaveslogowhite.png'
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
+// Utility function
+function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
+
+// HoverButton Component
+function HoverButton({ className, children, ...props }) {
+  const buttonRef = useRef(null)
+  const [isListening, setIsListening] = useState(false)
+  const [circles, setCircles] = useState([])
+  const lastAddedRef = useRef(0)
+
+  const createCircle = useCallback((x, y) => {
+    const buttonWidth = buttonRef.current?.offsetWidth || 0
+    const xPos = x / buttonWidth
+    const color = `linear-gradient(to right, var(--circle-start) ${xPos * 100}%, var(--circle-end) ${
+      xPos * 100
+    }%)`
+
+    setCircles((prev) => [
+      ...prev,
+      { id: Date.now(), x, y, color, fadeState: null },
+    ])
+  }, [])
+
+  const handlePointerMove = useCallback(
+    (event) => {
+      if (!isListening) return
+      
+      const currentTime = Date.now()
+      if (currentTime - lastAddedRef.current > 100) {
+        lastAddedRef.current = currentTime
+        const rect = event.currentTarget.getBoundingClientRect()
+        const x = event.clientX - rect.left
+        const y = event.clientY - rect.top
+        createCircle(x, y)
+      }
+    },
+    [isListening, createCircle]
+  )
+
+  const handlePointerEnter = useCallback(() => {
+    setIsListening(true)
+  }, [])
+
+  const handlePointerLeave = useCallback(() => {
+    setIsListening(false)
+  }, [])
+
+  useEffect(() => {
+    circles.forEach((circle) => {
+      if (!circle.fadeState) {
+        setTimeout(() => {
+          setCircles((prev) =>
+            prev.map((c) =>
+              c.id === circle.id ? { ...c, fadeState: "in" } : c
+            )
+          )
+        }, 0)
+
+        setTimeout(() => {
+          setCircles((prev) =>
+            prev.map((c) =>
+              c.id === circle.id ? { ...c, fadeState: "out" } : c
+            )
+          )
+        }, 1000)
+
+        setTimeout(() => {
+          setCircles((prev) => prev.filter((c) => c.id !== circle.id))
+        }, 2200)
+      }
+    })
+  }, [circles])
+
+  return (
+    <button
+      ref={buttonRef}
+      className={cn(
+        "relative isolate px-8 py-3 rounded-3xl",
+        "text-white font-medium text-base leading-6",
+        "backdrop-blur-lg bg-[rgba(43,55,80,0.1)]",
+        "cursor-pointer overflow-hidden",
+        "before:content-[''] before:absolute before:inset-0",
+        "before:rounded-[inherit] before:pointer-events-none",
+        "before:z-[1]",
+        "before:shadow-[inset_0_0_0_1px_rgba(170,202,255,0.2),inset_0_0_16px_0_rgba(170,202,255,0.1),inset_0_-3px_12px_0_rgba(170,202,255,0.15),0_1px_3px_0_rgba(0,0,0,0.50),0_4px_12px_0_rgba(0,0,0,0.45)]",
+        "before:mix-blend-multiply before:transition-transform before:duration-300",
+        "active:before:scale-[0.975]",
+        className
+      )}
+      onPointerMove={handlePointerMove}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      {...props}
+      style={{
+        "--circle-start": "var(--tw-gradient-from, #a0d9f8)",
+        "--circle-end": "var(--tw-gradient-to, #3a5bbf)",
+      }}
+    >
+      {circles.map(({ id, x, y, color, fadeState }) => (
+        <div
+          key={id}
+          className={cn(
+            "absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full",
+            "blur-lg pointer-events-none z-[-1] transition-opacity duration-300",
+            fadeState === "in" && "opacity-75",
+            fadeState === "out" && "opacity-0 duration-[1.2s]",
+            !fadeState && "opacity-0"
+          )}
+          style={{
+            left: x,
+            top: y,
+            background: color,
+          }}
+        />
+      ))}
+      {children}
+    </button>
+  )
+}
+
+// Main Header Component
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -28,7 +153,7 @@ export default function Header() {
   return (
     <>
       {/* Header Principal - Floating Container */}
-      <header className="fixed top-0 w-full z-50 pt-6 px-6">
+      <header className="fixed top-0 w-full z-50 pt-4 sm:pt-6 px-3 sm:px-6">
         <div className={`
           container mx-auto max-w-6xl
           bg-black/40 backdrop-blur-2xl
@@ -40,7 +165,7 @@ export default function Header() {
             : 'py-2.5 shadow-xl shadow-black/10'
           }
         `}>
-          <div className="px-6 flex justify-between items-center">
+          <div className="px-3 sm:px-6 flex justify-between items-center">
             
             {/* Logo */}
             <Link 
@@ -52,7 +177,8 @@ export default function Header() {
                 alt="Techwaves Logo" 
                 width={120}
                 height={40}
-                className="h-8 w-auto"
+                className="h-6 sm:h-8 w-auto"
+                priority
               />
             </Link>
 
@@ -75,25 +201,12 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* CTA Desktop - Register avec effet neon */}
+            {/* CTA Desktop - HoverButton */}
             <div className="hidden lg:flex items-center">
-              <Link 
-                href="/register" 
-                className="
-                  relative px-6 py-2.5 rounded-full text-sm font-semibold text-white
-                  bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600
-                  hover:from-blue-400 hover:via-cyan-300 hover:to-blue-500
-                  transition-all duration-300
-                  shadow-lg shadow-blue-500/40
-                  hover:shadow-blue-400/60
-                  hover:scale-105
-                  border border-cyan-300/30
-                  neon-glow
-                "
-              >
-                Join Now
-                {/* Effet de lueur supplémentaire */}
-                <div className="absolute inset-0 rounded-full bg-cyan-400/20 blur-md -z-10 animate-pulse"></div>
+              <Link href="/register">
+                <HoverButton className="px-4 sm:px-6 py-2 sm:py-2.5 text-sm font-semibold">
+                  Join Now
+                </HoverButton>
               </Link>
             </div>
 
@@ -123,7 +236,7 @@ export default function Header() {
             lg:hidden overflow-hidden transition-all duration-500
             ${isMenuOpen ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}
           `}>
-            <div className="px-6 pb-4 border-t border-white/5 pt-4">
+            <div className="px-4 sm:px-6 pb-4 border-t border-white/5 pt-4">
               <nav className="flex flex-col space-y-1">
                 {navItems.map((item) => (
                   <Link
@@ -142,23 +255,14 @@ export default function Header() {
                   </Link>
                 ))}
                 
-                {/* CTA Mobile avec le même effet neon */}
-                <Link 
-                  href="/register" 
-                  className="
-                    mt-4 px-4 py-3 rounded-xl text-sm font-semibold text-white text-center
-                    bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600
-                    hover:from-blue-400 hover:via-cyan-300 hover:to-blue-500
-                    transition-all duration-300
-                    shadow-lg shadow-blue-500/40
-                    border border-cyan-300/30
-                    relative overflow-hidden
-                  "
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Join Now
-                  <div className="absolute inset-0 bg-cyan-400/20 blur-sm -z-10"></div>
-                </Link>
+                {/* CTA Mobile - HoverButton */}
+                <div className="mt-4" onClick={() => setIsMenuOpen(false)}>
+                  <Link href="/register" className="block">
+                    <HoverButton className="w-full px-4 py-3 text-sm font-semibold">
+                      Join Now
+                    </HoverButton>
+                  </Link>
+                </div>
               </nav>
             </div>
           </div>
