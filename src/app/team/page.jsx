@@ -79,7 +79,7 @@ const TeamShowcasePage = () => {
         name: 'Zendaoui Rahma Douaa',
         designation: 'IT & Development Department',
         quote: 'Dedicated to creating seamless user experiences through clean code and innovative solutions.',
-        src: '/team/rahma.jpg',
+        src: '/team/rahma.JPG',
         linkedin: 'https://www.linkedin.com/in/rahma-zendaoui-ba4809268'
       },
       {
