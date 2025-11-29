@@ -41,14 +41,14 @@ const TeamShowcasePage = () => {
         name: 'Zertit Dorsane',
         designation: 'Leader of the club And IT & Development department',
         quote: 'Leading with innovation and dedication, driving our club towards excellence in technology and development. Together, we build the future.',
-        src: '/team/dorsane2.jpg',
+        src: '/team/dorsane2.JPG',
         linkedin: 'https://www.linkedin.com/in/zdorsane'
       },
       {
         name: 'Zertit Mahinar',
         designation: 'Leader of Graphic Design Department and HR Leader',
         quote: 'Bridging creativity and people management, fostering a culture where design thinking meets organizational excellence.',
-        src: '/team/mahinar2.jpg',
+        src: '/team/mahinar2.JPG',
         linkedin: 'https://www.linkedin.com/in/mahinar-zertit-53bbb3324'
       },
       {
@@ -86,7 +86,7 @@ const TeamShowcasePage = () => {
         name: 'Hamidane Yacine',
         designation: 'IT & Development Department',
         quote: 'Crafting robust solutions with attention to detail and a passion for cutting-edge technology.',
-        src: '/team/yasine.JPG',
+        src: '/team/yasine.jpg',
         linkedin: 'https://linkedin.com/'
       },
       {
@@ -168,7 +168,7 @@ const TeamShowcasePage = () => {
         name: 'Mohamed Abderahman',
         designation: 'Leader of Graphic Design Department',
         quote: 'Creating visual stories that inspire and communicate. Design is not just what it looks like, it\'s how it works.',
-        src: '/team/abdou2.jpg',
+        src: '/team/abdou2.JPG',
         linkedin: 'https://linkedin.com/'
       },
       
@@ -212,7 +212,7 @@ const TeamShowcasePage = () => {
         name: 'Soror Benabderhaman',
         designation: 'Leader of Content Creation & Events Department',
         quote: 'Crafting memorable experiences and engaging content that connects people and creates lasting impact.',
-        src: '/team/soror2.jpg',
+        src: '/team/soror2.JPG',
         linkedin: 'https://linkedin.com/'
       }
     ],
