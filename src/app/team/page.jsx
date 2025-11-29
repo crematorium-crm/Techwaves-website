@@ -123,7 +123,7 @@ const TeamShowcasePage = () => {
         name: 'Rahmani Yasmine',
         designation: 'Human Resources Department',
         quote: 'Connecting talent with opportunity. Building relationships that strengthen our community.',
-        src: '/team/yasmine.JPG',
+        src: '/team/yasmine.jpg',
         linkedin: 'https://linkedin.com/'
       },
       {
