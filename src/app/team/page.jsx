@@ -48,7 +48,7 @@ const TeamShowcasePage = () => {
         name: 'Zertit Mahinar',
         designation: 'Leader of Graphic Design Department and HR Leader',
         quote: 'Bridging creativity and people management, fostering a culture where design thinking meets organizational excellence.',
-        src: '/team/mahinar2.JPG',
+        src: '/team/mahinar2.jpg',
         linkedin: 'https://www.linkedin.com/in/mahinar-zertit-53bbb3324'
       },
       {
@@ -168,7 +168,7 @@ const TeamShowcasePage = () => {
         name: 'Mohamed Abderahman',
         designation: 'Leader of Graphic Design Department',
         quote: 'Creating visual stories that inspire and communicate. Design is not just what it looks like, it\'s how it works.',
-        src: '/team/abdou2.JPG',
+        src: '/team/abdou2.jpg',
         linkedin: 'https://linkedin.com/'
       },
       
@@ -212,7 +212,7 @@ const TeamShowcasePage = () => {
         name: 'Soror Benabderhaman',
         designation: 'Leader of Content Creation & Events Department',
         quote: 'Crafting memorable experiences and engaging content that connects people and creates lasting impact.',
-        src: '/team/soror2.JPG',
+        src: '/team/soror2.jpg',
         linkedin: 'https://linkedin.com/'
       }
     ],
